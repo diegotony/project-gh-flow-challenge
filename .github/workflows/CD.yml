@@ -32,6 +32,28 @@ jobs:
         with:
           terragrunt_version: 0.21.13
 
+      - uses: actions/setup-python@v2
+        # if: steps.build_package.outputs.released == 'true'
+        with:
+          python-version: '3.9' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+        
+      - name: Install Shyaml 
+        # if: steps.build_package.outputs.released == 'true'
+        run: |
+          pip install shyaml
+
+      - name: Get Functions
+        # if: steps.build_package.outputs.released == 'true'
+        run: |
+          TEST=$(cat template.yaml | shyaml keys Resources |  while read -r -d $'\n'  value; do echo "\"$value\","; done)
+          TF_VAR_lambda="'[$(echo ${TEST%?} | tr -d '\n')]'"
+          echo TF_VAR_lambda=$(echo TF_VAR_lambda) >>$GITHUB_ENV
+
+      - name: Check Functions
+        # if: steps.build_package.outputs.released == 'true'
+        run: |
+          echo '${{ env.TF_VAR_lambda }}'
+
       - name: Configure AWS credentials
         # if: steps.build_package.outputs.released == 'true'
         uses: aws-actions/configure-aws-credentials@v1
@@ -49,23 +71,3 @@ jobs:
         if: steps.build_package.outputs.released == 'true'
         working-directory: ${{ env.TF_DIR }}
         run: terragrunt apply -auto-approve
-
-      - uses: actions/setup-python@v2
-        if: steps.build_package.outputs.released == 'true'
-        with:
-          python-version: '3.9' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-        
-      - name: Install Shyaml 
-        if: steps.build_package.outputs.released == 'true'
-        run: |
-          pip install shyaml
-
-      - name: Get Functions
-        if: steps.build_package.outputs.released == 'true'
-        run: |
-          TEST=$(cat template.yaml | shyaml keys Resources |  while read -r -d $'\n'  value; do echo "\"$value\","; done)
-          TF_VAR_lambda="'[$(echo ${TEST%?} | tr -d '\n')]'"
-          echo TF_VAR_lambda=$(echo TF_VAR_lambda) >>$GITHUB_ENV
-      - name: Check Functions
-        run: |
-          echo '${{ env.TF_VAR_lambda }}'
