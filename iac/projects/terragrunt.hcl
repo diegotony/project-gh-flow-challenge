@@ -1,7 +1,6 @@
 locals {
   aws_region     = "us-east-2"
   aws_account_id = "237918751012"
-  aws_profile    = "gh-flow"
   app            = "gh-flow"
   org            = "me"
   details        = "Resource related to the gh-flow project"
