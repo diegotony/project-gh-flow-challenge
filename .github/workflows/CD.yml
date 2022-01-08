@@ -30,7 +30,7 @@ jobs:
         # if: steps.build_package.outputs.released == 'true'
         uses: autero1/action-terragrunt@v1.1.0
         with:
-          terragrunt_version: 0.21.13
+          terragrunt_version: 0.34.0
 
       - uses: actions/setup-python@v2
         # if: steps.build_package.outputs.released == 'true'
