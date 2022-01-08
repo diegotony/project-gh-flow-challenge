@@ -27,13 +27,13 @@ jobs:
           config-file: .releaserc.yml
 
       - name: Setup Terragrunt
-        if: steps.build_package.outputs.released == 'true'
+        # if: steps.build_package.outputs.released == 'true'
         uses: autero1/action-terragrunt@v1.1.0
         with:
           terragrunt_version: 0.21.13
 
       - name: Configure AWS credentials
-        if: steps.build_package.outputs.released == 'true'
+        # if: steps.build_package.outputs.released == 'true'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -41,7 +41,7 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: Add profile credentials to ~/.aws/credentials
-        if: steps.build_package.outputs.released == 'true'
+        # if: steps.build_package.outputs.released == 'true'
         run: |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile $AWS_PROFILE
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile $AWS_PROFILE
