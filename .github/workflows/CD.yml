@@ -53,7 +53,7 @@ jobs:
       - name: Check Functions
         # if: steps.build_package.outputs.released == 'true'
         run: |
-          echo '${{ env.TF_VAR_lambda }}'
+          echo '${{ env.TF_VAR_list_lambdas }}'
 
       - name: Configure AWS credentials
         # if: steps.build_package.outputs.released == 'true'
