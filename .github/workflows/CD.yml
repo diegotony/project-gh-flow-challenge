@@ -69,6 +69,6 @@ jobs:
         run: terragrunt plan
 
       - name: Terragrunt Apply
-        if: steps.build_package.outputs.released == 'true'
+        # if: steps.build_package.outputs.released == 'true'
         working-directory: ${{ env.TF_DIR }}
         run: terragrunt apply -auto-approve
