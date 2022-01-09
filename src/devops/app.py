@@ -25,13 +25,12 @@ def lambda_handler(event, context):
         "message": "Hello {0} your message will be send".format({data["to"]})
     }
 
-    return {
-        "statusCode": 200,
+    response = {
         "headers": {
             "Content-Type": "application/json"
         },
-        "body": json.dumps({
-            "message": item,
-            # "location": ip.text.replace("\n", "")
-        }),
+        "statusCode": 200,
+        "body": json.dumps(item)
     }
+
+    return response
