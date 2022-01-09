@@ -1,7 +1,8 @@
 module "ecrs" {
     source = "../../resources/ecr"
-    for_each = toset(var.list_lambdas)
-    name = each.key
+    # name = each.key
+    # for_each = toset(var.list_lambdas)
+    name = "gh-flow"
     image_tag_mutability = "IMMUTABLE"
     scan_on_push = true
 }

@@ -1,58 +1,32 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  python3.8
-
-  Sample SAM Template for gh-flow-challenge
-
+  gh-flow
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 3
 
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues:
+      - prod
+
 Resources:
-  HelloWorldFunction:
+  holi:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      PackageType: Image
-      ImageUri: ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/HelloWorldFunction
+      FunctionName: !Sub "${AWS::StackName}-holi"
+      CodeUri: src/hello_world/
+      Handler: app.lambda_handler
+      Runtime: python3.8
       Events:
         HelloWorld:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /hello
             Method: get
-
-  HelloWorldFunctiontest:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      PackageType: Image
-      ImageUri: ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/HelloWorldFunction
-      Events:
-        HelloWorld:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /hello
-            Method: get
-
-  HelloWorldFunctiontesd:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      PackageType: Image
-      ImageUri: ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/HelloWorldFunction
-      Events:
-        HelloWorld:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /hello
-            Method: get
-
-
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./src/hello_world
-      DockerTag: python3.8-v1
-
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -61,9 +35,3 @@ Outputs:
   HelloWorldApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-  HelloWorldFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn

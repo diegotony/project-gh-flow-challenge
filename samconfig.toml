@@ -1,0 +1,7 @@
+version = 0.1
+stack_name = "gh-flow"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-13hxx35t4l6wt"
+s3_prefix = "gh-flow"
+region = "us-east-2"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"

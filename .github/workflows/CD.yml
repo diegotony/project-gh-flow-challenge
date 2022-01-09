@@ -9,14 +9,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      TF_VAR_list_lambdas: ""
-      TF_DIR: "iac/projects"
+      AWS_S3_BUCKET: ${{ secrets.S3_BUCKET }}
+      APP_NAME: gh-flow
+      ENV: ""
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          token: ${{ secrets.GH_TOKEN }}
-    
+
+
       - name: Release
         id: build_package
         env:
@@ -26,53 +27,30 @@ jobs:
           release-branches: '["main", "master"]'
           config-file: .releaserc.yml
 
-      - name: Setup Terragrunt
-        # if: steps.build_package.outputs.released == 'true'
-        uses: autero1/action-terragrunt@v1.1.0
-        with:
-          terragrunt_version: 0.34.0
-
       - uses: actions/setup-python@v2
-        # if: steps.build_package.outputs.released == 'true'
-        with:
-          python-version: '3.9' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-        
-      - name: Install Shyaml 
-        # if: steps.build_package.outputs.released == 'true'
-        run: |
-          pip install shyaml
+        if: steps.build_package.outputs.released == 'true'
 
-      - name: Get Functions
-        # if: steps.build_package.outputs.released == 'true'
-        run: |
-          export TEST=$(cat template.yaml | shyaml keys Resources |  while read -r -d $'\n'  value; do echo "\"$value\","; done)
-          export TF_VAR_list_lambdas=$(echo "[$(echo ${TEST%?} | tr -d '\n' )]" | tr "[:upper:]" "[:lower:]")  
-          echo $TF_VAR_list_lambdas
-          echo TF_VAR_list_lambdas=$(echo $TF_VAR_list_lambdas) >>$GITHUB_ENV
-
-      - name: Check Functions
-        # if: steps.build_package.outputs.released == 'true'
-        run: |
-          echo '${{ env.TF_VAR_list_lambdas }}'
+      - uses: aws-actions/setup-sam@v1
+        if: steps.build_package.outputs.released == 'true'
 
       - name: Configure AWS credentials
-        # if: steps.build_package.outputs.released == 'true'
+        if: steps.build_package.outputs.released == 'true'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      - name: Terragrunt Plan
-        # if: steps.build_package.outputs.released == 'true'
-        working-directory: ${{ env.TF_DIR }}
-        run: terragrunt run-all plan
-        env:
-          TF_VAR_list_lambdas: '${{ env.TF_VAR_list_lambdas }}'
+      - name: Build
+        run: sam build --use-container
+        if: steps.build_package.outputs.released == 'true'
 
-      - name: Terragrunt Apply
-        # if: steps.build_package.outputs.released == 'true'
-        working-directory: ${{ env.TF_DIR }}
-        run: terragrunt run-all apply --terragrunt-non-interactive -auto-approve
-        env:
-          TF_VAR_list_lambdas: '${{ env.TF_VAR_list_lambdas }}'
+      - name: Environment
+        run: |
+          if [[ "${GITHUB_REF##*/}" == "main" ]]; then
+            environment="prod"
+            echo "ENV=$(echo ${environment})" >> $GITHUB_ENV
+          fi
+      # sam deploy
+      - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name ${{ env.APP_NAME}} --s3-bucket ${{ env.AWS_S3_BUCKET}} --capabilities CAPABILITY_IAM --parameter-overrides ParameterKey=Environment,ParameterValue=${{ env.ENV}}
+
