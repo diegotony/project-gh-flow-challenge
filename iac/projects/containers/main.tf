@@ -1,4 +1,4 @@
-module "name" {
+module "ecrs" {
     source = "../../resources/ecr"
     for_each = toset(var.lambda)
     name = each.key

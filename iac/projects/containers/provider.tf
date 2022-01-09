@@ -12,7 +12,6 @@ terraform {
 # Configure the AWS Provider
 provider "aws" {
   region              = "us-east-2"
-  profile             = "gh-flow"
   allowed_account_ids = ["237918751012"]
 }
 

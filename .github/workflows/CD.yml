@@ -45,8 +45,9 @@ jobs:
       - name: Get Functions
         # if: steps.build_package.outputs.released == 'true'
         run: |
-          TEST=$(cat template.yaml | shyaml keys Resources |  while read -r -d $'\n'  value; do echo "\"$value\","; done)
-          TF_VAR_lambda="'[$(echo ${TEST%?} | tr -d '\n')]'"
+          export TEST=$(cat template.yaml | shyaml keys Resources |  while read -r -d $'\n'  value; do echo "\"$value\","; done)
+          export TF_VAR_lambda="\"[$(echo ${TEST%?} | tr -d '\n')]\""
+          echo $TF_VAR_lambda
           echo TF_VAR_lambda=$(echo TF_VAR_lambda) >>$GITHUB_ENV
 
       - name: Check Functions
