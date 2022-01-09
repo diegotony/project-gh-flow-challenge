@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      TF_VAR_lambda: ""
+      TF_VAR_list_lambdas: ""
       TF_DIR: "iac/projects"
     steps:
       - uses: actions/checkout@v2
@@ -46,9 +46,9 @@ jobs:
         # if: steps.build_package.outputs.released == 'true'
         run: |
           export TEST=$(cat template.yaml | shyaml keys Resources |  while read -r -d $'\n'  value; do echo "\"$value\","; done)
-          export TF_VAR_lambda="\"[$(echo ${TEST%?} | tr -d '\n')]\""
-          echo $TF_VAR_lambda
-          echo TF_VAR_lambda=$(echo TF_VAR_lambda) >>$GITHUB_ENV
+          export TF_VAR_list_lambdas=$(echo "[$(echo ${TEST%?} | tr -d '\n' )]" | tr "[:upper:]" "[:lower:]")  
+          echo $TF_VAR_list_lambdas
+          echo TF_VAR_list_lambdas=$(echo TF_VAR_list_lambdas) >>$GITHUB_ENV
 
       - name: Check Functions
         # if: steps.build_package.outputs.released == 'true'

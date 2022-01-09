@@ -23,7 +23,7 @@ Resources:
             Path: /hello
             Method: get
 
-  HelloWorldFunctionV2:
+  HelloWorldFunctiontest:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       PackageType: Image
@@ -34,6 +34,20 @@ Resources:
           Properties:
             Path: /hello
             Method: get
+
+  HelloWorldFunctiontestd:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      PackageType: Image
+      ImageUri: ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/HelloWorldFunction
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /hello
+            Method: get
+    Metadata:
+
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./src/hello_world
