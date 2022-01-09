@@ -66,13 +66,13 @@ jobs:
       - name: Terragrunt Plan
         # if: steps.build_package.outputs.released == 'true'
         working-directory: ${{ env.TF_DIR }}
-        run: terragrunt plan
+        run: terragrunt run-all plan
         env:
           TF_VAR_list_lambdas: '${{ env.TF_VAR_list_lambdas }}'
 
       - name: Terragrunt Apply
         # if: steps.build_package.outputs.released == 'true'
         working-directory: ${{ env.TF_DIR }}
-        run: terragrunt apply -auto-approve
+        run: terragrunt run-all apply -auto-approve
         env:
           TF_VAR_list_lambdas: '${{ env.TF_VAR_list_lambdas }}'
