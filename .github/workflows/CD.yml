@@ -48,7 +48,7 @@ jobs:
           export TEST=$(cat template.yaml | shyaml keys Resources |  while read -r -d $'\n'  value; do echo "\"$value\","; done)
           export TF_VAR_list_lambdas=$(echo "[$(echo ${TEST%?} | tr -d '\n' )]" | tr "[:upper:]" "[:lower:]")  
           echo $TF_VAR_list_lambdas
-          echo TF_VAR_list_lambdas=$(echo TF_VAR_list_lambdas) >>$GITHUB_ENV
+          echo TF_VAR_list_lambdas=$(echo $TF_VAR_list_lambdas) >>$GITHUB_ENV
 
       - name: Check Functions
         # if: steps.build_package.outputs.released == 'true'
