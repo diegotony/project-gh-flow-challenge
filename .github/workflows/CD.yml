@@ -77,4 +77,3 @@ jobs:
 
       - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name ${{ env.APP_NAME}} --s3-bucket ${{ env.AWS_S3_BUCKET}} --capabilities CAPABILITY_IAM --parameter-overrides ParameterKey=Environment,ParameterValue=${{ env.ENV}}
         if: steps.build_package.outputs.released == 'true'
-
