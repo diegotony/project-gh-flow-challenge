@@ -49,3 +49,5 @@ jobs:
       - name: Test 
         run:
           python -m pytest tests/ -v
+        env:
+          AWS_SAM_STACK_NAME: gh-flow
