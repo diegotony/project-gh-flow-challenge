@@ -2,8 +2,8 @@ name: CI/Python/Lint-Test
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - '**.py'
 
 jobs:
   lint:
