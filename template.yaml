@@ -35,10 +35,10 @@ Resources:
             Path: /hello
             Method: any
 
-  devops:
+  devopsFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      FunctionName: !Sub "${AWS::StackName}-devops"
+      FunctionName: !Sub "${AWS::StackName}-devopsFunction"
       CodeUri: src/devops/
       Handler: app.lambda_handler
       Runtime: python3.8

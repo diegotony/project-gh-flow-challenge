@@ -41,7 +41,7 @@ module "policies-jwt" {
 
 
 data "aws_lambda_function" "devops" {
-  function_name = "gh-flow-devops"
+  function_name = "gh-flow-devopsFunction"
 }
 
 module "attach-policy-api-key-devops" {
