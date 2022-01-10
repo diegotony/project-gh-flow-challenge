@@ -16,10 +16,8 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
 
       - uses: actions/setup-python@v2
-        if: steps.build_package.outputs.released == 'true'
 
       - name: Configure AWS credentials
-        if: steps.build_package.outputs.released == 'true'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -27,10 +25,8 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - uses: aws-actions/setup-sam@v1
-        if: steps.build_package.outputs.released == 'true'
 
       - name: Configure AWS credentials
-        if: steps.build_package.outputs.released == 'true'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
