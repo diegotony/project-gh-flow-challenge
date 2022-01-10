@@ -17,6 +17,7 @@ The application uses several AWS resources, including Lambda functions and an AP
 - FastApi
 - Pylint
 - Pytest
+- Snyk
 
 
 ## Deploy the sample application
