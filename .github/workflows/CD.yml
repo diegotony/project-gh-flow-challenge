@@ -47,6 +47,14 @@ jobs:
         with:
           terragrunt_version: 0.34.0
 
+      - name: Environment
+        if: steps.build_package.outputs.released == 'true'
+        run: |
+          if [[ "${GITHUB_REF##*/}" == "main" ]]; then
+            environment="prod"
+            echo "ENV=$(echo ${environment})" >> $GITHUB_ENV
+          fi
+
       - name: Terragrunt Plan
         if: steps.build_package.outputs.released == 'true'
         working-directory: ${{ env.TF_DIR }}
@@ -62,15 +70,6 @@ jobs:
         env:
           TF_VAR_JWT: '${{ secrets.TF_VAR_JWT }}'
           TF_VAR_API_KEY: '${{ secrets.TF_VAR_API_KEY }}'
-
-
-      - name: Environment
-        if: steps.build_package.outputs.released == 'true'
-        run: |
-          if [[ "${GITHUB_REF##*/}" == "main" ]]; then
-            environment="prod"
-            echo "ENV=$(echo ${environment})" >> $GITHUB_ENV
-          fi
 
       - name: Build
         run: sam build --use-container
