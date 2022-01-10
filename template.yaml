@@ -19,22 +19,7 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
-      Auth:
-        ApiKeyRequired: true # sets for all methods
 
-  ApiKey: 
-    Type: AWS::ApiGateway::ApiKey
-    DependsOn: [ApiUsagePlan]
-    Properties: 
-      Name: !Join ["", [{"Ref": "AWS::StackName"}, "-apikey"]]
-      Description: "CloudFormation API Key V1"
-      Enabled: true
-      GenerateDistinctId: false
-      Value: 2f5ae96c-b558-4c7b-a590-a501ae1c3f6c
-      StageKeys:
-        - RestApiId: !Ref ServerlessHttpApi
-          StageName: Prod
-          
   holi:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -49,32 +34,6 @@ Resources:
             RestApiId: !Ref ServerlessHttpApi
             Path: /hello
             Method: any
-            Auth:
-              ApiKeyRequired: true
-
-  ApiUsagePlan:
-    Type: "AWS::ApiGateway::UsagePlan"
-    DependsOn:
-      - ServerlessHttpApiProdStage
-    Properties:
-      ApiStages: 
-        - ApiId: !Ref ServerlessHttpApi
-          Stage: Prod
-      Description: !Join [" ", [{"Ref": "AWS::StackName"}, "usage plan"]]
-      Quota:
-        Limit: 1000
-        Period: MONTH
-      UsagePlanName: !Join ["", [{"Ref": "AWS::StackName"}, "-usage-plan"]]
-
-  ApiUsagePlanKey:
-    Type: "AWS::ApiGateway::UsagePlanKey"
-    DependsOn: 
-      - ServerlessHttpApi
-    Properties:
-      KeyId: !Ref ApiKey
-      KeyType: API_KEY
-      UsagePlanId: !Ref ApiUsagePlan
-
 
   devops:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -88,10 +47,8 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref ServerlessHttpApi
-            Path: /devops
+            Path: /DevOps
             Method: any
-            Auth:
-              ApiKeyRequired: true
 
 
 Outputs:

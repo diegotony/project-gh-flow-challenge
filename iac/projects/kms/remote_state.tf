@@ -2,7 +2,7 @@
 terraform {
   backend "s3" {
     bucket = "gh-flow-gh-flow-terraform-state"
-    key    = "projects/gh-flow/containers/terraform.tfstate"
+    key    = "projects/gh-flow/kms/terraform.tfstate"
     region = "us-east-2"
   }
 }
