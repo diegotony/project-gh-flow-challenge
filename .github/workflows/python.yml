@@ -25,6 +25,7 @@ jobs:
           pip install pylint
 
       - name: Pylint 
+        continue-on-error: true
         run:
           pylint src
 
@@ -43,7 +44,7 @@ jobs:
           python-version: '3.9' # Version range or exact version of a Python version to use, using SemVer's version range syntax
       - name: Install dependencies
         run:
-          pip install pytest pytest-mock
+          pip install pytest pytest-mock boto3
 
       - name: Test 
         run:
