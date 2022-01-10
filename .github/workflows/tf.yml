@@ -1,4 +1,4 @@
-name: CI/TF
+name: CI/TF/Validate
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: CI/SAM
+name: CI/SAM/Validate
 
 on:
   push:

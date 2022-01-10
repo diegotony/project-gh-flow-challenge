@@ -1,4 +1,4 @@
-name: CI/Lint-Test
+name: CI/Python/Lint-Test
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: CD
+name: CD/SAM-Terraform
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     env:
       AWS_S3_BUCKET: ${{ secrets.S3_BUCKET }}
@@ -40,6 +40,28 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Setup Terragrunt
+        if: steps.build_package.outputs.released == 'true'
+        uses: autero1/action-terragrunt@v1.1.0
+        with:
+          terragrunt_version: 0.34.0
+
+      - name: Terragrunt Plan
+        if: steps.build_package.outputs.released == 'true'
+        working-directory: ${{ env.TF_DIR }}
+        run: terragrunt run-all plan
+        env:
+          TF_VAR_JWT: '${{ secrets.TF_VAR_JWT }}'
+          TF_VAR_API_KEY: '${{ secrets.TF_VAR_API_KEY }}'
+
+      - name: Terragrunt Apply
+        if: steps.build_package.outputs.released == 'true'
+        working-directory: ${{ env.TF_DIR }}
+        run: terragrunt run-all apply --terragrunt-non-interactive -auto-approve
+        env:
+          TF_VAR_JWT: '${{ secrets.TF_VAR_JWT }}'
+          TF_VAR_API_KEY: '${{ secrets.TF_VAR_API_KEY }}'
 
 
       - name: Environment
