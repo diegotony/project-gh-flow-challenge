@@ -1,18 +1,14 @@
-name: CI/TF/Validate
-
-on:
-  push
-
+name: CI/Snyk
+on: push
 jobs:
-  tf-validate:
+  security:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GH_TOKEN }}
-
+      - uses: actions/checkout@master
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
+        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
